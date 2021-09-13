@@ -27,19 +27,20 @@ The file explorer is accessible using the button in left corner of the navigatio
 Register users
 - POST /announces
 Create announces, user should be authenticated.
-- GET /announces/:id/categories/:search
+- GET users/1/announces?category=1
 Get announces by category
-- Get /users/:id/announces
+- Get /users/1/announces
 Get announces by user
-- PATCH /announces/:status
+- PATCH /users/1/announces?id=1&status=1
 Update announce's status, user should be authenticated. 
-- DELETE /announce/:id
+- DELETE users/1/announce/1
 Delete an announce, user should be authenticated. 
 
 ## Schemas DB
 
 All persistence is with MongoDB, the schemas are:
 
+>```
 > Users {
 > id: Number,
 > name: String,
@@ -52,4 +53,4 @@ All persistence is with MongoDB, the schemas are:
 >  announceData : { type: Data, required: true }
 >}]
 > }
-	
+```	
