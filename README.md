@@ -25,6 +25,8 @@ The file explorer is accessible using the button in left corner of the navigatio
 **Endpoints:**
 - POST /users  
 Register users
+- POST /users?name=username&password=userpassword
+Login user
 - POST /announces
 Create announces, user should be authenticated.
 - GET users/1/announces?category=1
@@ -45,11 +47,12 @@ All persistence is with MongoDB, the schemas are:
 > id: Number,
 > name: String,
 > password: String,
+> toke: String,
 > announces: [ {
 >  announceId: { type: Number, required: true },
 >  announceDescription: { type: String, required: true },
 >  announceCategory: { type: String, required: true },
->  announceStatus: { type: Number, required: true }.
+>  announceStatus: { type: Number, required: true },
 >  announceData : { type: Data, required: true }
 >}]
 > }
