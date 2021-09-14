@@ -1,0 +1,23 @@
+{
+  "name": "announce-me",
+  "version": "1.0.0",
+  "description": "announce-me app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcastrocondor/announce-me.git"
+  },
+  "author": "Melisa Castro R",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcastrocondor/announce-me/issues"
+  },
+  "homepage": "https://github.com/mcastrocondor/announce-me#readme",
+  "dependencies": {
+    "@condor-labs/mongodb": "^1.1.1",
+    "express": "^4.17.1"
+  }
+}
