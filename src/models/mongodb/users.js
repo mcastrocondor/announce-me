@@ -1,6 +1,7 @@
-const mongodb = require("@condor-labs/mongodb")();
-const helperMongo = require("./mongoHelper");
-const Schema = mongodb.mongoose.Schema;
+//const mongoHelper = require("@condor-labs/mongodb")();
+//const mongoose = mongoHelper.mongoose;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
   id: Number,  
@@ -16,7 +17,6 @@ let userSchema = new Schema({
     }],
 });
 
-const dbConnection = helperMongo.clients["connection_mongo_1"]; // I got the name of the connection from mongoDbSettings
-let userModel = dbConnection.model("User", userSchema); // then I am able to create a my model based on the connection object that I got using my helper
+let userModel = mongoose.model("User", userSchema); // then I am able to create a my model based on the connection object that I got using my helper
 
 module.exports = userModel;

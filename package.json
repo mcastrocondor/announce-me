@@ -19,7 +19,9 @@
   "dependencies": {
     "@condor-labs/mongodb": "^1.1.1",
     "config": "^3.3.6",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "mongoose": "^6.0.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

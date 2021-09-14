@@ -7,12 +7,8 @@ const helper = {
   isConnected: (connectionName) => {
     return mongo._isConnected(connectionName);
   },
-  connect: async () => {
-    // It will connect every connection on the array "mongoDbSettings"
-    for (const item of mongoDbSettings) {
-      let client = await mongo.getClient(item.connectionName);
-      helper.clients[item.connectionName] = client;
-    }
+  connect: async () => {    
+      await mongo.getClient();
   },
 };
 
