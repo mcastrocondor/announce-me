@@ -1,11 +1,12 @@
 const mongoDbSettings = [
     {
       connectionName: "connection_mongo_1",
-      host: "localhost",
+      host: "cluster0.expwh.mongodb.net",
       port: 27017,
-      database: "development",
-      user: "local-user",
-      password: "superSecretPass",
-      ssl: false,
+      database: "myFirstDatabase",
+      user: "test_user",
+      password: "123456Cloud",
+      ssl: 1,
     }
+
 ];
