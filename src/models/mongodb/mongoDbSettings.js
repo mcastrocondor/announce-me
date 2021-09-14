@@ -1,4 +1,4 @@
-const mongoDbSettings = [
+const mongoDbSettings = 
     {
       connectionName: "connection_mongo_1",
       host: "cluster0.expwh.mongodb.net",
@@ -6,7 +6,7 @@ const mongoDbSettings = [
       database: "myFirstDatabase",
       user: "test_user",
       password: "123456Cloud",
-      ssl: 1,
-    }
+      ssl: true,
+    };
 
-];
+    module.exports = mongoDbSettings;

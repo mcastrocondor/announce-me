@@ -12,8 +12,7 @@ let userSchema = new Schema({
       announceId: { type: Number, required: true },
       announceDescription: { type: String, required: true },
       announceCategory: { type: String, required: true },
-      announceStatus: { type: Number, required: true },
-      announceData: { type: Data, required: true }
+      announceStatus: { type: Number, required: true }
     }],
 });
 

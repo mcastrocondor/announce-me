@@ -1,5 +1,5 @@
 "use strict";
-
+const mongoDbSettings = require("./mongoDbSettings");
 const mongo = require("@condor-labs/mongodb")(mongoDbSettings);
 
 const helper = {

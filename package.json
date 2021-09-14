@@ -18,6 +18,10 @@
   "homepage": "https://github.com/mcastrocondor/announce-me#readme",
   "dependencies": {
     "@condor-labs/mongodb": "^1.1.1",
+    "config": "^3.3.6",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
