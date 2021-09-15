@@ -111,7 +111,7 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
             })
             newAnnounce
             .save()
-            .then(item => console.log(item))
+            .then(item => console.log('Announce created ', item))
             .catch(err => console.log(err));
         } else{
             console.log('error invalids data');

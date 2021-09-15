@@ -1,17 +1,15 @@
 const Joi = require('joi');
 
 const schemaAnnounce = Joi.object({
-    userId: Joi.number()
+    userId: Joi.string()
         .required(),
 
     description: Joi.string()
-        .alphanum()
         .min(3)
         .max(200)
         .required(),
 
     category: Joi.string()
-        .alphanum()
         .min(3)
         .max(200)
         .required(),
