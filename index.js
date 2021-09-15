@@ -69,7 +69,7 @@ app.post('/users', (req, res) => {
             const newUser = new User({
             name: req.body.name,
             username: req.body.username.toLowerCase(),
-            password: bcrypt.hashSync(req.body.password)
+            password: bcrypt.hashSync(req.body.password, 10)
             })
             newUser
             .save()
@@ -128,7 +128,7 @@ app.get('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
         .catch(err => res.status(404).json({ success: false }));
     } else {
         Announce.find({ userId: req.params.id })
-        .then(() => res.json({ success: true }))
+        .then(items => console.log(res.json(items)))
         .catch(err => res.status(404).json({ success: false }));
     }
     

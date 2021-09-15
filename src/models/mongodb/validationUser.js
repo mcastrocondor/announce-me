@@ -13,7 +13,7 @@ const schemaUser = Joi.object({
         .required(),  
 
     password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,20}$'))
+        //.pattern(new RegExp('^[a-zA-Z0-9]{3,20}$'))
         .required(),
 
     token: [
