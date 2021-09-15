@@ -4,16 +4,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
-  id: Number,  
-  name: String,
+  name: { type: String, required: true },
+  username: { type: String, required: true },
   token: String,
-  password: String,
+  password: { type: String, required: true },
   announces: [ 
       {
-      announceId: { type: Number, required: true },
-      announceDescription: { type: String, required: true },
-      announceCategory: { type: String, required: true },
-      announceStatus: { type: Number, required: true }
+      announceId: { type: Number, required: false },
+      announceDescription: { type: String, required: false },
+      announceCategory: { type: String, required: false },
+      announceStatus: { type: Number, required: false }
     }],
 });
 
