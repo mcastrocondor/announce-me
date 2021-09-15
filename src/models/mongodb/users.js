@@ -7,16 +7,9 @@ let userSchema = new Schema({
   name: { type: String, required: true },
   username: { type: String, required: true },
   token: String,
-  password: { type: String, required: true },
-  announces: [ 
-      {
-      announceId: { type: Number, required: false },
-      announceDescription: { type: String, required: false },
-      announceCategory: { type: String, required: false },
-      announceStatus: { type: Number, required: false }
-    }],
+  password: { type: String, required: true }
 });
 
-let userModel = mongoose.model("User", userSchema); // then I am able to create a my model based on the connection object that I got using my helper
+let userModel = mongoose.model("User", userSchema);
 
 module.exports = userModel;

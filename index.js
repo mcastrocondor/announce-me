@@ -6,7 +6,9 @@ const app = express();
 const db = config.get('mongoURI');
 const port = 5000;
 const User = require("./src/models/mongodb/users");
+const Announce = require("./src/models/mongodb/announces");
 const validateUser = require("./src/models/mongodb/validationUser");
+const validateAnnounce = require("./src/models/mongodb/validationAnnounce");
 //const mongoHelper = require("./src/models/mongodb/mongoHelper");
 
 app.use(express.json());
