@@ -106,7 +106,7 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
             const newAnnounce = new Announce({
             userId: req.params.id,
             description: req.body.description,
-            category: req.body.category,
+            category: req.body.category.toLowerCase(),
             status: 1
             })
             newAnnounce
@@ -123,8 +123,8 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
 
 app.get('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
     if(typeof req.query.category !== 'undefined'){
-        Announce.find({ userId: req.params.id, category: req.query.category })
-        .then(() => res.json({ success: true }))
+        Announce.find({ userId: req.params.id, category: req.query.category.toLowerCase() })
+        .then(items => console.log(res.json(items)))
         .catch(err => res.status(404).json({ success: false }));
     } else {
         Announce.find({ userId: req.params.id })
@@ -146,8 +146,8 @@ app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, (
     .catch(err => res.status(404).json({ success: false }));
 });
 
-app.put('/users/:id/announces', (req, res) => {
-    Announce.findOneAndUpdate({ userId: req.params.id, _id: req.body.id}, req.body)
+app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, (req, res) => {
+    Announce.findOneAndUpdate({ userId: req.params.id, _id: req.params.announceId}, req.body)
         .then(() => res.json({ success: true }))
         .catch(err => res.status(404).json({ success: false }));
 });  
