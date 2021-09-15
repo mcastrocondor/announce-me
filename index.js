@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const config = require('config');
 const app = express();
 const db = config.get('mongoURI');
@@ -25,7 +26,7 @@ app.listen(port, () => {
 data = {
     name: 'Rigo Arias',
     username: 'rigoA123',
-    password: 'TStrue123'
+    password: bcrypt.hashSync('TStrue123')
 };
 try{
     const validatedData = validateUser.validate({
