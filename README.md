@@ -23,11 +23,11 @@ Development by
 
 The file explorer is accessible using the button in left corner of the navigation bar. You can create a new file by clicking the **New file** button in the file explorer. You can also create folders by clicking the **New folder** button.
 **Endpoints:**
-- POST /users  
+- POST /users?name=name&username=username&password=userpassword  
 Register users
-- POST /users?name=username&password=userpassword
+- POST /users/auth?username=username&password=userpassword
 Login user
-- POST /announces
+- POST /users/1/announces?description=somedescription&category=somecategory
 Create announces, user should be authenticated.
 - GET users/1/announces?category=1
 Get announces by category
