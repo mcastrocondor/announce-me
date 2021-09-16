@@ -10,6 +10,7 @@ const User = require('./src/models/mongodb/users');
 const Announce = require('./src/models/mongodb/announces');
 const validateUser = require('./src/models/mongodb/validationUser');
 const validateAnnounce = require('./src/models/mongodb/validationAnnounce');
+const validateLogin = require('./src/models/mongodb/validationLogin');
 const middleware = require('./src/middleware');
 const service = require('./src/service');
 //const mongoHelper = require("./src/models/mongodb/mongoHelper");
@@ -85,13 +86,26 @@ app.post('/users', (req, res) => {
 });
 
 app.post('/users/auth', (req, res) => {
-    User.findOne({ username: req.body.username.toLowerCase() })
-    .then(async user => {
-        const match = await bcrypt.compare(req.body.password, user.password);
-        if(match){
-            return res.status(200).send({ token: service.createToken(user) });
+    try{
+        const validatedData = validateLogin.validate({
+        username: req.body.username,
+        password: req.body.password
+        });
+        if(!validatedData.error){
+            User.findOne({ username: req.body.username.toLowerCase() })
+            .then(async user => {
+                const match = await bcrypt.compare(req.body.password, user.password);
+                if(match){
+                   return res.status(200).send({ token: service.createToken(user) });
+                }
+            });
+        } else {
+            logger.err('error invalids data');
         }
-    });
+
+    } catch(err){
+    
+    }
 });
 
 app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
@@ -114,7 +128,7 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
             .save()
             .then(item => logger.information('Announce created ', item))
             .catch(err => logger.err(err));
-        } else{
+        } else {
             logger.err('error invalids data');
         }
     } catch(err){

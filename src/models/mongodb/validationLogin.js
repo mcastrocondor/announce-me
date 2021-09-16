@@ -1,11 +1,6 @@
 const Joi = require('joi');
 
-const schemaUser = Joi.object({
-    name: Joi.string()
-        .min(3)
-        .max(60)
-        .required(),
-
+const schemaLogin = Joi.object({
     username: Joi.string()
         .alphanum()
         .min(3)
@@ -16,11 +11,7 @@ const schemaUser = Joi.object({
         .pattern(new RegExp('^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,20}$'))
         .required(),
 
-    token: [
-        Joi.string(),
-        Joi.number()
-    ]
     
 });
 
-module.exports = schemaUser;
+module.exports = schemaLogin;
