@@ -4,7 +4,7 @@
   "description": "announce-me app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "mongoose": "^6.0.5"
   },
   "devDependencies": {
+    "jest": "^27.2.0",
     "nodemon": "^2.0.12"
   }
 }
