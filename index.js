@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const logger = require('@condor-labs/logger');
 const config = require('config');
 const app = express();
 const db = config.get('mongoURI');
@@ -17,11 +18,11 @@ app.use(express.json());
 
 mongoose
   .connect(db, {})
-  .then(() => console.log('MongoDB Connected...'))
-  .catch(err => console.log(err));
+  .then(() => logger.log('MongoDB Connected...'))
+  .catch(err => logger.err(err));
 
 app.listen(port, () => { 
-  console.log(`Server started on port: http://localhost:${port}`);
+  logger.log(`Server started on port: http://localhost:${port}`);
  // await  mongoHelper.connect();
 });
 
@@ -64,7 +65,7 @@ app.post('/users', (req, res) => {
         username: req.body.username,
         password: req.body.password
         });
-        console.log('value ', validatedData);
+        logger.log('value ', validatedData);
         if(!validatedData.error){
             const newUser = new User({
             name: req.body.name,
@@ -73,13 +74,13 @@ app.post('/users', (req, res) => {
             })
             newUser
             .save()
-            .then(item => console.log(item))
-            .catch(err => console.log(err));
+            .then(item => logger.info(item))
+            .catch(err => logger.err(err));
         } else{
-            console.log('error invalids data');
+            logger.error('error invalids data');
         }
     } catch(err){
-        console.log(err);
+        logger.err(err);
     }
 });
 
@@ -101,7 +102,7 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
         category: req.body.category,
         status: 1
         });
-        console.log('value ', validatedData);
+        logger.log('value ', validatedData);
         if(!validatedData.error){
             const newAnnounce = new Announce({
             userId: req.params.id,
@@ -111,24 +112,24 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
             })
             newAnnounce
             .save()
-            .then(item => console.log('Announce created ', item))
-            .catch(err => console.log(err));
+            .then(item => logger.information('Announce created ', item))
+            .catch(err => logger.err(err));
         } else{
-            console.log('error invalids data');
+            logger.err('error invalids data');
         }
     } catch(err){
-        console.log(err);
+        logger.error(err);
     }
 });
 
 app.get('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
     if(typeof req.query.category !== 'undefined'){
         Announce.find({ userId: req.params.id, category: req.query.category.toLowerCase() })
-        .then(items => console.log(res.json(items)))
+        .then(items => logger.info(res.json(items)))
         .catch(err => res.status(404).json({ success: false }));
     } else {
         Announce.find({ userId: req.params.id })
-        .then(items => console.log(res.json(items)))
+        .then(items => logger.info(res.json(items)))
         .catch(err => res.status(404).json({ success: false }));
     }
     
@@ -137,7 +138,7 @@ app.get('/users/:id/announces', middleware.ensureAuthenticated, (req, res) => {
 app.get('/users', (req, res) => {
     User.find()
     .sort({ date: -1 })
-    .then(items => console.log(res.json(items)));
+    .then(items => logger.info(res.json(items)));
   });
 
 app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, (req, res) => {
