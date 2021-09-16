@@ -7,7 +7,10 @@
 
 - Node Js
 - Mongo DB
+- @condor-labs/logger
 - Jest
+- Jwt-simple
+- Bcrypt
 - Ec2
 - Joi
 - Docker
