@@ -5,6 +5,8 @@ const schemaUpdateAnnounce = Joi.object({
         .required(),   
 
     userId: Joi.string()
+        .min(8)
+        .max(50)
         .required(),
 
     status: Joi.number()

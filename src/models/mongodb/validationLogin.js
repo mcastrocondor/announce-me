@@ -9,6 +9,8 @@ const schemaLogin = Joi.object({
 
     password: Joi.string()
        // .pattern(new RegExp('^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{4,20}$'))
+        .min(3)
+        .max(20)
         .required(),
 
     

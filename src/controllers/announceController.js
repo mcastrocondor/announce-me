@@ -1,6 +1,8 @@
 const validationUpdateAnnounce = require('../models/mongodb/validationUpdateAnnounce');
 const validationAnnounce = require('../models/mongodb/validationAnnounce');
 const validationDeleteAnnounce = require('../models/mongodb/validationDeleteAnnounce');
+const validationFilter = require('../models/mongodb/validationFilter');
+const validationId = require('../models/mongodb/validationId');
 const announceRepository = require('../repository/announceRepository');
 const logger = require('@condor-labs/logger');
 
@@ -29,18 +31,53 @@ exports.createAnnounce = async function(req, res) {
 };
 
 exports.getAnnouncesbyUser = async function(req, res) {
-    
-    if(typeof req.query.category !== 'undefined'){
-        
-        return await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase() );     
-   
-    } else {
-        return await announceRepository.findAnnouncesByUser(req.params.id);
+  if(typeof req.query.category !== 'undefined') {
+    try{
+        const validatedDataFilter = validationFilter.validate({
+        userId: req.params.id,
+        category: req.query.category
+        });
+           
+        if(!validatedDataFilter.error){
+           const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
+           console.log('Filtered announces ', filterAnnunces); 
+           return filterAnnunces;
+
+         } else{
+            logger.error('error invalids data');
+            return 'error invalids data';
+        }
+     
+    } catch(err){
+        logger.err(err);
+        return err;
     }
+  }
+  else {
+    try{
+        const validatedData = validationId.validate({
+        id: req.params.id
+        });
+           
+        if(!validatedData.error){
+            const announces = await announceRepository.findAnnouncesByUser(req.params.id);    
+            console.log('Announces by user ', announces);
+            return announce;             
+        } else{
+            logger.error('error invalids data');
+            return 'error invalids data';
+        }
+     
+    } catch(err){
+        logger.err(err);
+        return err;
+    }
+   }
+
+    
 };
 
-exports.removeAnnounce = async function(req, res) {
-    
+exports.removeAnnounce = async function(req, res) {    
     try{
         const validatedData = validationDeleteAnnounce.validate({
         userId: req.params.id,

@@ -2,6 +2,8 @@ const Joi = require('joi');
 
 const schemaAnnounce = Joi.object({
     userId: Joi.string()
+        .min(8)
+        .max(50)
         .required(),
 
     description: Joi.string()
