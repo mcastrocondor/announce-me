@@ -1,4 +1,5 @@
 const Announce = require('../models/mongodb/announces');
+const logger = require('@condor-labs/logger');
 
 exports.saveAnnounce = function(userId, description, category ) {
     const newAnnounce = new Announce({
@@ -9,30 +10,34 @@ exports.saveAnnounce = function(userId, description, category ) {
     })
     newAnnounce
     .save()
-    .then(announce => { return item })
+    .then(announce => { return announce })
     .catch(err => { return err });
 };
 
-exports.findAnnouncesByUser = function(userId) {
-    Announce.find({ userId: userId })
-    .then(announces => { return res.json(announces) })
-    .catch(err => { return res.status(404).json({ success: false }) });
+exports.findAnnouncesByUser =  async function(userId) {
+    const announces = await Announce.find({ userId: userId })
+    .then(items => { logger.log('findAnnouncesByUser ' + items); return items })
+    .catch(err => { return err });
+    return announces;
 };
 
-exports.findAnnouncesByCategoy = function(userId, category) {
-    Announce.find({ userId: userId, category: category })
-    .then(announces => { return res.json(announces) })
-    .catch(err => { return res.status(404).json({ success: false }) });
+exports.findAnnouncesByCategoy = async function(userId, category) {
+   const announces = await Announce.find({ userId: userId, category: category })
+    .then(items => { logger.log('findAnnouncesByCategoy ' + items); return items })
+    .catch(err => { return err });
+    return announces;
 };
 
-exports.deleteAnnounce = function(announceId, userId) {
-    Announce.findOneAndDelete({ _id: announceId, userId: userId })
-    .then(() => { return res.json({ success: true }) })
-    .catch(err => { return res.status(404).json({ success: false }) });
+exports.deleteAnnounce = async function(announceId, userId) {
+    const announce = await Announce.findOneAndDelete({ _id: announceId, userId: userId })
+    .then((item) => { return item  })
+    .catch(err => { return err });
+    return announce;
 };
 
-exports.deleteAnnounce = function(announceId, userId) {
-    Announce.findOneAndUpdate({ userId: userId, _id: announceId}, req.body)
-    .then(() => { return res.json({ success: true }) })
-    .catch(err => { return res.status(404).json({ success: false }) });
+exports.updateAnnounce = async function(userId, announceId, status) {
+   const announce = await Announce.findOneAndUpdate({ _id: announceId, userId: userId}, { status: status})
+    .then((announce) => { return announce })
+    .catch(err => { return err });
+    return announce;
 };

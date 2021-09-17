@@ -24,22 +24,27 @@ exports.createAnnounce = function(req, res) {
     }
 };
 
-exports.getAnnouncesbyUser = function(req, res) {
+exports.getAnnouncesbyUser = async function(req, res) {
+    var announces = '';
     if(typeof req.query.category !== 'undefined'){
         
-        return announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase() );
+        announces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase() );
+        logger.log('announces by category '+ res.json(announces));        
    
     } else {
-        return announceRepository.findAnnouncesByUser(req.params.id);
+        announces = await announceRepository.findAnnouncesByUser(req.params.id);
+        logger.log('announces by user '+ res.json(announces));  
     }
+    return res.json(announces);
 };
 
-exports.removeAnnounce = function(req, res) {
-    return announceRepository.deleteAnnounce(req.params.announceId, req.params.id);
+exports.removeAnnounce = async function(req, res) {
+    return await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);
 };
 
 
 exports.updateAnnounce = function(req, res) {
-    return announceRepository.deleteAnnounce(req.params.announceId, req.params.id);
+    
+    return announceRepository.updateAnnounce(req.params.id, req.params.announceId, req.body.status);
 };
 

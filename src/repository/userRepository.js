@@ -1,5 +1,6 @@
 const User = require('../models/mongodb/users');
 const bcrypt = require('bcrypt');
+const logger = require('@condor-labs/logger');
 
 
 exports.saveUser = function(name, username, password) {
@@ -12,11 +13,14 @@ exports.saveUser = function(name, username, password) {
         .save()
         .then(user => { return user })
         .catch(err => { return err });
+    return newUser;
 };
 
-exports.loginUser = function(username) {
-    User.findOne({ username: username })
-    .then(user => { return user })
+exports.loginUser = async function(username) {
+    
+    const login = await User.findOne({ username: username })
+    .then(user => { logger.log('loginUser ' + user); return user })
     .catch(err => { return err });
+     return login;
 };
 

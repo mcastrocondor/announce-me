@@ -1,5 +1,7 @@
 
+const bcrypt = require('bcrypt');
 const validateUser = require('../models/mongodb/validationUser');
+const validateLogin = require('../models/mongodb/validationLogin');
 const userRepository = require('../repository/userRepository');
 const service = require('../service');
 const logger = require('@condor-labs/logger');
@@ -12,7 +14,7 @@ exports.createUser = function(req, res) {
         username: req.body.username,
         password: req.body.password
         });
-        logger.log('value ', validatedData);
+        
         if(!validatedData.error){
             username = req.body.username.toLowerCase();
             passwordCrypt = bcrypt.hashSync(req.body.password, 10);
@@ -34,8 +36,10 @@ exports.authenticateUser = async function(req, res) {
         username: req.body.username,
         password: req.body.password
         });
+        
         if(!validatedData.error){
-            const user = userRepository.loginUser(req.body.username.toLowerCase()); 
+            const user = await userRepository.loginUser(req.body.username.toLowerCase()); 
+            console.log('resss', user);
             if(user) {
                 const match = await bcrypt.compare(req.body.password, user.password);
                 if(match){
