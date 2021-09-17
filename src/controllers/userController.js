@@ -19,6 +19,7 @@ exports.createUser = function(req, res) {
             username = req.body.username.toLowerCase();
             passwordCrypt = bcrypt.hashSync(req.body.password, 10);
             const newUser = userRepository.saveUser(req.body.name, username, passwordCrypt);
+            console.log('Created User ', newUser);
             return newUser;
             
         } else{
@@ -38,8 +39,7 @@ exports.authenticateUser = async function(req, res) {
         });
         
         if(!validatedData.error){
-            const user = await userRepository.loginUser(req.body.username.toLowerCase()); 
-            console.log('resss', user);
+            const user = await userRepository.loginUser(req.body.username.toLowerCase());             
             if(user) {
                 const match = await bcrypt.compare(req.body.password, user.password);
                 if(match){

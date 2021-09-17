@@ -65,12 +65,7 @@ app.get('/users/:id/announces', middleware.ensureAuthenticated, AnnounceControll
 
 app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.removeAnnounce);
 
-app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, (req, res) => {
-
-    Announce.findOneAndUpdate({ userId: req.params.id, _id: req.params.announceId}, req.body)
-        .then(() => res.json({ success: true }))
-        .catch(err => res.status(404).json({ success: false }));
-});  
+app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.updateAnnounce);  
     
 
 
