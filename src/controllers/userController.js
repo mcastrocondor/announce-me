@@ -21,6 +21,7 @@ exports.createUser = function(req, res) {
             const newUser = userRepository.saveUser(req.body.name, username, passwordCrypt);
             console.log('Created User ', newUser);
             return newUser;
+            //return res.json({ success: true });
             
         } else{
             logger.error('error invalids data');

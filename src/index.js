@@ -5,10 +5,10 @@ const config = require('config');
 const app = express();
 const db = config.get('mongoURI');
 const port = 5000;
-const userController = require('./src/controllers/userController');
-const AnnounceController = require('./src/controllers/announceController');
+const userController = require('./controllers/userController');
+const AnnounceController = require('./controllers/announceController'); 
 
-const middleware = require('./src/middleware');
+const middleware = require('./middleware');
 //const mongoHelper = require("./src/models/mongodb/mongoHelper");
 
 app.use(express.json());
@@ -24,7 +24,7 @@ app.listen(port, () => {
 });
 
 /*
-//Save User
+// Save User
 data = {
     name: 'Rigo Arias',
     username: 'rigoA123',
@@ -68,4 +68,4 @@ app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, A
 app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.updateAnnounce);  
     
 
-
+module.exports = app;
