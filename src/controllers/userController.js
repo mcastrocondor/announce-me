@@ -7,7 +7,7 @@ const service = require('../service');
 const logger = require('@condor-labs/logger');
 
 
-exports.createUser = function(req, res) {
+exports.createUser = async function(req, res) {
     try{
         const validatedData = validateUser.validate({
         name: req.body.name,
@@ -18,9 +18,9 @@ exports.createUser = function(req, res) {
         if(!validatedData.error){
             username = req.body.username.toLowerCase();
             passwordCrypt = bcrypt.hashSync(req.body.password, 10);
-            const newUser = userRepository.saveUser(req.body.name, username, passwordCrypt);
+            const newUser = await userRepository.saveUser(req.body.name, username, passwordCrypt);
             console.log('Created User ', newUser);
-            return newUser;
+            return res.status(200).send(newUser);
             //return res.json({ success: true });
             
         } else{

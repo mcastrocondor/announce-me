@@ -1,6 +1,6 @@
 const { TestWatcher } = require("jest");
 const userController = require('../controllers/userController');
-const app = require('../../index');
+const app = require('../index');
 
 
 describe("Add user function", () => {
