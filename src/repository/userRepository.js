@@ -1,11 +1,11 @@
 const User = require('../models/mongodb/users');
 
 
-exports.saveUser = async function(name, username, password) {
+exports.saveUser = async function(object) {
     const newUser = new User({
-        name: name,
-        username: username,
-        password: password
+        name: object.name,
+        username: object.username,
+        password: object.password
         });
     return await newUser.save();
 };

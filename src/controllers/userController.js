@@ -18,10 +18,14 @@ exports.createUser = async function(req, res) {
         if(!validatedData.error){
             username = req.body.username.toLowerCase();
             passwordCrypt = bcrypt.hashSync(req.body.password, 10);
-            const newUser = await userRepository.saveUser(req.body.name, username, passwordCrypt);
+            const user = {
+                name: req.body.name,
+                username: username,
+                password: passwordCrypt
+            };
+            const newUser = await userRepository.saveUser(user);
             console.log('Created User ', newUser);
             return res.status(200).send(newUser);
-            //return res.json({ success: true });
             
         } else{
             logger.error('error invalids data');

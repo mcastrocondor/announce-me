@@ -9,10 +9,13 @@ describe("User repository", () => {
         newUser.save.mockResolvedValue({ });
     });
     test("It should create a user", async () => {
-        const name = 'Ana Cardona';
-        const username = 'ana12';
-        const password = 'ana123';
-        const user = await userRepository.saveUser(name, username, password);
+        
+        const data = {
+         name: 'Ana Cardona',
+         username: 'ana12',
+         password: 'ana123'
+        };
+        const user = await userRepository.saveUser(data);
         console.log(user);
         
         expect(newUser.save).toHaveBeenCalled();
