@@ -6,7 +6,7 @@ exports.saveUser = async function(name, username, password) {
         name: name,
         username: username,
         password: password
-        })
+        });
     return await newUser.save();
 };
 

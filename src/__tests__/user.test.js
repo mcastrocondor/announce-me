@@ -6,7 +6,7 @@ const userRepository = require('../repository/userRepository');
 describe("User repository", () => {
     const newUser = new User();
     beforeAll(() => {
-        newUser.save.mockResolvedValue({ name: 'Farru' });
+        newUser.save.mockResolvedValue({ });
     });
     test("It should create a user", async () => {
         const name = 'Ana Cardona';
