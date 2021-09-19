@@ -1,11 +1,11 @@
 const Announce = require('../models/mongodb/announces');
 const logger = require('@condor-labs/logger');
 
-exports.saveAnnounce = async function(userId, description, category ) {
+exports.saveAnnounce = async function( object ) {
     const newAnnounce = new Announce({
-    userId: userId,
-    description: description,
-    category: category,
+    userId: object.userId,
+    description: object.description,
+    category: object.category,
     status: 1
     })
     await newAnnounce

@@ -7,7 +7,14 @@ exports.saveUser = async function(object) {
         username: object.username,
         password: object.password
         });
-    return await newUser.save();
+        const savedUser = await newUser.save();
+        const data = {
+            name: savedUser.name,
+            username: savedUser.username,
+            id: savedUser._id
+        };
+        
+    return data;
 };
 
 exports.loginUser = async function(username) {

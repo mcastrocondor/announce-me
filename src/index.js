@@ -23,38 +23,6 @@ app.listen(port, () => {
  // await  mongoHelper.connect();
 });
 
-/*
-// Save User
-data = {
-    name: 'Rigo Arias',
-    username: 'rigoA123',
-    password: bcrypt.hashSync('TStrue123')
-};
-try{
-    const validatedData = validateUser.validate({
-    name: data.name,
-    username: data.username,
-    password: data.password
-    });
-    console.log('value ', validatedData);
-    if(!validatedData.error){
-    const newUser = new User({
-        name: data.name,
-        username: data.username,
-        password: data.password
-        })
-        newUser
-        .save()
-        .then(item => console.log(item))
-        .catch(err => console.log(err));
-    } else{
-    console.log('error invalids data');
-    }
-} catch(err){
-    console.log(err);
-}
-*/
-
 app.post('/users', userController.createUser);
 
 app.post('/users/auth', userController.authenticateUser);

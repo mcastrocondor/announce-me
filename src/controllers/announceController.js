@@ -17,9 +17,14 @@ exports.createAnnounce = async function(req, res) {
         });
         
         if(!validatedData.error){
-            const announce = await announceRepository.saveAnnounce(req.params.id, req.body.description, req.body.category.toLowerCase());   
+            const data = {
+                userId: req.params.id,
+                description: req.body.description,
+                category: req.body.category.toLowerCase()
+            }
+            const announce = await announceRepository.saveAnnounce(data);   
             console.log('Created Announce', announce);
-            return announce;                 
+            return res.status(200).send(announce);                
         } else{
             logger.error('error invalids data');
             return 'error invalids data';
@@ -41,7 +46,7 @@ exports.getAnnouncesbyUser = async function(req, res) {
         if(!validatedDataFilter.error){
            const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
            console.log('Filtered announces ', filterAnnunces); 
-           return filterAnnunces;
+           return res.status(200).send(filterAnnunces);    
 
          } else{
             logger.error('error invalids data');
@@ -62,7 +67,7 @@ exports.getAnnouncesbyUser = async function(req, res) {
         if(!validatedData.error){
             const announces = await announceRepository.findAnnouncesByUser(req.params.id);    
             console.log('Announces by user ', announces);
-            return announce;             
+            return res.status(200).send(announces);              
         } else{
             logger.error('error invalids data');
             return 'error invalids data';
@@ -87,7 +92,8 @@ exports.removeAnnounce = async function(req, res) {
         if(!validatedData.error){
             const announce = await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);  
             console.log('Deleted announce ', announce);
-            return announce;             
+            return announce; 
+                        
         } else{
             logger.error('error invalids data');
             return 'error invalids data';
