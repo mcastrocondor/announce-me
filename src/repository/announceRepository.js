@@ -15,6 +15,7 @@ exports.saveAnnounce = async function( object ) {
 
 exports.findAnnouncesByUser =  async function(userId) {
     const announces = await Announce.find({ userId: userId });
+    console.log('findAnnouncesByUser ', announces);
     return announces;
 };
 

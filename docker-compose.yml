@@ -15,7 +15,7 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - ./src:/usr/src/app
+      - /src:/usr/src/app
 volumes:
     esdata1:
       driver: local
