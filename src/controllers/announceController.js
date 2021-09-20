@@ -92,7 +92,7 @@ exports.removeAnnounce = async function(req, res) {
         if(!validatedData.error){
             const announce = await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);  
             console.log('Deleted announce ', announce);
-            return announce; 
+            return res.status(200).send(announce); 
                         
         } else{
             logger.error('error invalids data');
@@ -117,7 +117,7 @@ exports.updateAnnounce = async function(req, res) {
         if(!validatedData.error){
             const announce = await announceRepository.modifyAnnounce(req.params.id, req.params.announceId, req.body.status);    
             console.log('Updated announce ', announce);
-            return announce;             
+            return res.status(200).send(announce);             
         } else{
             logger.error('error invalids data');
             return 'error invalids data';
