@@ -6,7 +6,7 @@ const logger = require('@condor-labs/logger');
 const config = require('config');
 const app = express();
 const db = config.get('mongoURI');
-const port = 5000;
+const port = process.env.PORT;
 const userController = require('./controllers/userController');
 const AnnounceController = require('./controllers/announceController'); 
 
