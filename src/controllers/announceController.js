@@ -105,8 +105,11 @@ exports.updateAnnounce = async function (req, res) {
 
         if (!validatedData.error) {
             const announce = await announceRepository.modifyAnnounce(req.params.id, req.params.announceId, req.body.status);
-
-            return res.status(201).send({ data: announce, msg: "Updated announce" });
+            if (announce) {
+                return res.status(201).send({ data: announce, msg: "Updated announce" });
+            } else {
+                return res.status(404).send({ msg: "Announce doesn't find" });
+            }
         } else {
             return 'error invalids data';
         }
