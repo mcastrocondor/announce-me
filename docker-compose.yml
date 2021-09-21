@@ -1,14 +1,10 @@
 version: "3"
 services:
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
-    container_name: es
+  mongodb:
+    image: mongo:5.0
     environment:
-      - discovery.type=single-node
-    ports:
-      - 9200:9200
-    volumes:
-      - esdata1:/usr/share/elasticsearch/data
+      - MONGO_INITDB_ROOT_USERNAME=test_user
+      - MONGO_INITDB_ROOT_PASSWORD=123456Cloud
   web:
     image: melisa/node-web-app
     command: node ./src/index

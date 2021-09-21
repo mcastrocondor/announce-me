@@ -8,6 +8,9 @@ describe("User repository", () => {
     beforeAll(() => {
         newUser.save.mockResolvedValue({name: 'Ana Cardona', username: 'ana12', id: '2345fghj'});
     });
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
     test("It should create a user", async () => {
         
         const data = {
