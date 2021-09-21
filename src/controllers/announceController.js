@@ -4,125 +4,114 @@ const validationDeleteAnnounce = require('../models/mongodb/validationDeleteAnno
 const validationFilter = require('../models/mongodb/validationFilter');
 const validationId = require('../models/mongodb/validationId');
 const announceRepository = require('../repository/announceRepository');
-const logger = require('@condor-labs/logger');
 
 
-exports.createAnnounce = async function(req, res) {
-    try{
+exports.createAnnounce = async function (req, res) {
+    try {
         const validatedData = validationAnnounce.validate({
-        userId: req.params.id,
-        description: req.body.description,
-        category: req.body.category,
-        status: 1
+            userId: req.params.id,
+            description: req.body.description,
+            category: req.body.category,
+            status: 1
         });
-        
-        if(!validatedData.error){
+
+        if (!validatedData.error) {
             const data = {
                 userId: req.params.id,
                 description: req.body.description,
                 category: req.body.category.toLowerCase()
             }
-            const announce = await announceRepository.saveAnnounce(data);   
-            console.log('Created Announce', announce);
-            return res.status(201).send({ data: announce, msg: "Created announce" });                
-        } else{
-            logger.error('error invalids data');
+            const announce = await announceRepository.saveAnnounce(data);
+            return res.status(201).send({ data: announce, msg: "Created announce" });
+        } else {
+
             return res.status(400).send({ msg: "error invalids data" });
         }
-    } catch(err){
-        logger.err(err);
+    } catch (err) {
+
         return res.status(500).send({ msg: err });
     }
 };
 
-exports.getAnnouncesbyUser = async function(req, res) {
-  if(typeof req.query.category !== 'undefined') {
-    try{
-        const validatedDataFilter = validationFilter.validate({
-        userId: req.params.id,
-        category: req.query.category
-        });
-           
-        if(!validatedDataFilter.error){
-           const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
-           console.log('Filtered announces ', filterAnnunces); 
-           return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by category"});    
+exports.getAnnouncesbyUser = async function (req, res) {
+    if (typeof req.query.category !== 'undefined') {
+        try {
+            const validatedDataFilter = validationFilter.validate({
+                userId: req.params.id,
+                category: req.query.category
+            });
 
-         } else{
-            logger.error('error invalids data');
-            return res.status(400).send({ msg: "error invalids data" });
+            if (!validatedDataFilter.error) {
+                const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
+                return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by category" });
+
+            } else {
+                return res.status(400).send({ msg: "error invalids data" });
+            }
+        } catch (err) {
+            return res.status(500).send({ msg: err });
         }
-     
-    } catch(err){
-        logger.err(err);
-        return res.status(500).send({ msg: err });
     }
-  }
-  else {
-    try{
-        const validatedData = validationId.validate({
-        id: req.params.id
-        });
-           
-        if(!validatedData.error){
-            const announces = await announceRepository.findAnnouncesByUser(req.params.id);    
-            console.log('Announces by user ', announces);
-            return res.status(200).send({ data: announces, msg: "Filtered announces by user" });              
-        } else{
-            logger.error('error invalids data');
-            return res.status(400).send({ msg: "error invalids data" });
+    else {
+        try {
+            const validatedData = validationId.validate({
+                id: req.params.id
+            });
+
+            if (!validatedData.error) {
+                const announces = await announceRepository.findAnnouncesByUser(req.params.id);
+                return res.status(200).send({ data: announces, msg: "Filtered announces by user" });
+            } else {
+                return res.status(400).send({ msg: "error invalids data" });
+            }
+        } catch (err) {
+            return res.status(500).send({ msg: err });
         }
-     
-    } catch(err){
-        logger.err(err);
-        return res.status(500).send({ msg: err });
     }
-   }    
 };
 
-exports.removeAnnounce = async function(req, res) {    
-    try{
+exports.removeAnnounce = async function (req, res) {
+    try {
         const validatedData = validationDeleteAnnounce.validate({
-        userId: req.params.id,
-        id: req.params.announceId
+            userId: req.params.id,
+            id: req.params.announceId
         });
-           
-        if(!validatedData.error){
-            const announce = await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);  
-            console.log('Deleted announce ', announce);
-            return res.status(200).send({ data:announce, msg: "Deleted announce"}); 
-                        
-        } else{
-            logger.error('error invalids data');
+
+        if (!validatedData.error) {
+            const announce = await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);
+            if (announce) {
+                return res.status(200).send({ data: announce, msg: "Deleted announce" });
+            } else {
+                return res.status(404).send({ msg: "Announce doesn't find" });
+            }
+
+        } else {
             return res.status(400).send({ msg: "error invalids data" });
         }
-     
-    } catch(err){
-        logger.err(err);
+
+    } catch (err) {
         return res.status(500).send({ msg: err });
     }
 };
 
 
-exports.updateAnnounce = async function(req, res) {
-    try{
+exports.updateAnnounce = async function (req, res) {
+    try {
         const validatedData = validationUpdateAnnounce.validate({
-        userId: req.params.id,
-        id: req.params.announceId,
-        status: req.body.status
+            userId: req.params.id,
+            id: req.params.announceId,
+            status: req.body.status
         });
-           
-        if(!validatedData.error){
-            const announce = await announceRepository.modifyAnnounce(req.params.id, req.params.announceId, req.body.status);    
-            console.log('Updated announce ', announce);
-            return res.status(201).send({ data: announce, msg: "Updated announce" });             
-        } else{
-            logger.error('error invalids data');
+
+        if (!validatedData.error) {
+            const announce = await announceRepository.modifyAnnounce(req.params.id, req.params.announceId, req.body.status);
+
+            return res.status(201).send({ data: announce, msg: "Updated announce" });
+        } else {
             return 'error invalids data';
         }
-     
-    } catch(err){
-        logger.err(err);
+
+    } catch (err) {
         return res.status(500).send({ msg: err });
     }
 };

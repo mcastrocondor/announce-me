@@ -7,8 +7,8 @@ const helper = {
   isConnected: (connectionName) => {
     return mongo._isConnected(connectionName);
   },
-  connect: async () => {    
-      await mongo.getClient();
+  connect: async () => {
+    await mongo.getClient();
   },
 };
 

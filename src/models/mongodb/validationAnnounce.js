@@ -19,8 +19,8 @@ const schemaAnnounce = Joi.object({
     status: Joi.number()
         .integer()
         .min(1)
-        .max(1) 
-        .required()   
+        .max(1)
+        .required()
 });
 
 module.exports = schemaAnnounce;

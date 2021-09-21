@@ -9,7 +9,7 @@ const schemaFilterAnnounce = Joi.object({
     category: Joi.string()
         .min(3)
         .max(200)
-        .required() 
+        .required()
 });
 
 module.exports = schemaFilterAnnounce;

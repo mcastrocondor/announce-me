@@ -8,7 +8,7 @@ const app = express();
 const db = config.get('mongoURI');
 const port = process.env.PORT;
 const userController = require('./controllers/userController');
-const AnnounceController = require('./controllers/announceController'); 
+const AnnounceController = require('./controllers/announceController');
 
 const middleware = require('./middleware');
 //const mongoHelper = require("./src/models/mongodb/mongoHelper");
@@ -20,9 +20,9 @@ mongoose
   .then(() => logger.log('MongoDB Connected...'))
   .catch(err => logger.err(err));
 
-app.listen(port, () => { 
+app.listen(port, () => {
   logger.log(`Server started on port: http://localhost:${port}`);
- // await  mongoHelper.connect();
+  // await  mongoHelper.connect();
 });
 
 app.post('/users', userController.createUser);
@@ -35,7 +35,7 @@ app.get('/users/:id/announces', middleware.ensureAuthenticated, AnnounceControll
 
 app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.removeAnnounce);
 
-app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.updateAnnounce);  
-    
+app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.updateAnnounce);
+
 
 module.exports = app;
