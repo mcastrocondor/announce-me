@@ -24,14 +24,14 @@ exports.createAnnounce = async function(req, res) {
             }
             const announce = await announceRepository.saveAnnounce(data);   
             console.log('Created Announce', announce);
-            return res.status(200).send(announce);                
+            return res.status(201).send({ data: announce, msg: "Created announce" });                
         } else{
             logger.error('error invalids data');
-            return 'error invalids data';
+            return res.status(400).send({ msg: "error invalids data" });
         }
     } catch(err){
         logger.err(err);
-        return err;
+        return res.status(500).send({ msg: err });
     }
 };
 
@@ -46,16 +46,16 @@ exports.getAnnouncesbyUser = async function(req, res) {
         if(!validatedDataFilter.error){
            const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
            console.log('Filtered announces ', filterAnnunces); 
-           return res.status(200).send(filterAnnunces);    
+           return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by category"});    
 
          } else{
             logger.error('error invalids data');
-            return 'error invalids data';
+            return res.status(400).send({ msg: "error invalids data" });
         }
      
     } catch(err){
         logger.err(err);
-        return err;
+        return res.status(500).send({ msg: err });
     }
   }
   else {
@@ -67,19 +67,17 @@ exports.getAnnouncesbyUser = async function(req, res) {
         if(!validatedData.error){
             const announces = await announceRepository.findAnnouncesByUser(req.params.id);    
             console.log('Announces by user ', announces);
-            return res.status(200).send(announces);              
+            return res.status(200).send({ data: announces, msg: "Filtered announces by user" });              
         } else{
             logger.error('error invalids data');
-            return 'error invalids data';
+            return res.status(400).send({ msg: "error invalids data" });
         }
      
     } catch(err){
         logger.err(err);
-        return err;
+        return res.status(500).send({ msg: err });
     }
-   }
-
-    
+   }    
 };
 
 exports.removeAnnounce = async function(req, res) {    
@@ -92,16 +90,16 @@ exports.removeAnnounce = async function(req, res) {
         if(!validatedData.error){
             const announce = await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);  
             console.log('Deleted announce ', announce);
-            return res.status(200).send(announce); 
+            return res.status(200).send({ data:announce, msg: "Deleted announce"}); 
                         
         } else{
             logger.error('error invalids data');
-            return 'error invalids data';
+            return res.status(400).send({ msg: "error invalids data" });
         }
      
     } catch(err){
         logger.err(err);
-        return err;
+        return res.status(500).send({ msg: err });
     }
 };
 
@@ -117,7 +115,7 @@ exports.updateAnnounce = async function(req, res) {
         if(!validatedData.error){
             const announce = await announceRepository.modifyAnnounce(req.params.id, req.params.announceId, req.body.status);    
             console.log('Updated announce ', announce);
-            return res.status(200).send(announce);             
+            return res.status(201).send({ data: announce, msg: "Updated announce" });             
         } else{
             logger.error('error invalids data');
             return 'error invalids data';
@@ -125,7 +123,7 @@ exports.updateAnnounce = async function(req, res) {
      
     } catch(err){
         logger.err(err);
-        return err;
+        return res.status(500).send({ msg: err });
     }
 };
 

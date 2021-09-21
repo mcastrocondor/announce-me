@@ -17,22 +17,28 @@ exports.createUser = async function(req, res) {
         
         if(!validatedData.error){
             username = req.body.username.toLowerCase();
-            passwordCrypt = bcrypt.hashSync(req.body.password, 10);
-            const user = {
+            const gotUser = await userRepository.getUser(username); 
+           
+            if(gotUser){               
+                return res.status(409).send({ userId: gotUser._id, msg: "Username really exist" });
+            } else {
+                passwordCrypt = bcrypt.hashSync(req.body.password, 10);
+                const user = {
                 name: req.body.name,
                 username: username,
                 password: passwordCrypt
-            };
-            const newUser = await userRepository.saveUser(user);
-            console.log('Created User ', newUser);
-            return res.status(200).send(newUser);
-            
+                };
+                const newUser = await userRepository.saveUser(user);
+                console.log('Created User ', newUser);
+                return res.status(201).send({ createdUser: newUser, msg: "Created User" });
+            }  
         } else{
             logger.error('error invalids data');
-            return 'error invalids data';
+            return res.status(400).send({ msg: "error invalids data" });
         }
     } catch(err){
         logger.err(err);
+        return res.status(500).send({ msg: err });
     }
 };
 
@@ -44,23 +50,24 @@ exports.authenticateUser = async function(req, res) {
         });
         
         if(!validatedData.error){
-            const user = await userRepository.loginUser(req.body.username.toLowerCase());             
+            const user = await userRepository.getUser(req.body.username.toLowerCase());             
             if(user) {
                 const match = await bcrypt.compare(req.body.password, user.password);
                 if(match){
                     return res.status(200).send({ token: service.createToken(user) });
                 } else {
-                    return 'Password is incorrect';
+                    return res.status(404).send({ msg: "Password is incorrect" });
                 }  
             } else {
-                return "User doesn't find, verify your data";
+                return res.status(404).send({ msg: "User doesn't find, verify your data" });
             }
                     
         } else {
             logger.err('error invalids data');
+            return res.status(400).send({ msg: "error invalids data" });
         }
 
     } catch(err){
-    
+        return res.status(500).send({ msg: err });
     }
 };

@@ -17,7 +17,7 @@ exports.saveUser = async function(object) {
     return data;
 };
 
-exports.loginUser = async function(username) {
+exports.getUser = async function(username) {
     
     const login = await User.findOne({ username: username });
      return login;
