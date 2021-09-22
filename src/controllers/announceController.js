@@ -70,7 +70,7 @@ exports.getAnnouncesbyUser = async function (req, res) {
     }
 };
 
-exports.getAnnouncesbyId = async function (req, res) {
+exports.getAnnouncebyId = async function (req, res) {
     
         try {
             const validatedData = validationId.validate({
