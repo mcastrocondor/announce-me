@@ -3,7 +3,6 @@ var moment = require("moment");
 var config = require("../config/token");
 
 exports.ensureAuthenticated = function (req, res, next) {
-  console.log('req.headers', req.headers);
   if (!req.headers.authorization) {
     return res
       .status(403)

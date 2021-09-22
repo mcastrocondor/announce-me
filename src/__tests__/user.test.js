@@ -19,7 +19,6 @@ describe("User repository", () => {
          password: 'ana123'
         };
         const user = await userRepository.saveUser(data);
-        console.log('savedUser: ',user);
         
         expect(newUser.save).toHaveBeenCalled();
         expect(user).toEqual(expect.not.objectContaining(data));

@@ -23,6 +23,11 @@ exports.findAnnouncesByCategoy = async function (userId, category) {
     return announces;
 };
 
+exports.findAnnounceById = async function (id) {
+    const announces = await Announce.find({ _id: id });
+    return announces;
+};
+
 exports.deleteAnnounce = async function (announceId, userId) {
     const announce = await Announce.findOneAndDelete({ _id: announceId, userId: userId });
     return announce;

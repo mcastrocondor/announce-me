@@ -33,6 +33,8 @@ app.post('/users/:id/announces', middleware.ensureAuthenticated, AnnounceControl
 
 app.get('/users/:id/announces', middleware.ensureAuthenticated, AnnounceController.getAnnouncesbyUser);
 
+app.post('/users/announces/:id', middleware.ensureAuthenticated, AnnounceController.getAnnouncesbyId);
+
 app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.removeAnnounce);
 
 app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.updateAnnounce);

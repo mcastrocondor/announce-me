@@ -70,6 +70,24 @@ exports.getAnnouncesbyUser = async function (req, res) {
     }
 };
 
+exports.getAnnouncesbyId = async function (req, res) {
+    
+        try {
+            const validatedData = validationId.validate({
+                id: req.params.id
+            });
+
+            if (!validatedData.error) {
+                const announce = await announceRepository.findAnnounceById(req.params.id);
+                return res.status(200).send({ data: announce, msg: "Filtered announce by id" });
+            } else {
+                return res.status(400).send({ msg: "error invalids data" });
+            }
+        } catch (err) {
+            return res.status(500).send({ msg: err });
+        }
+};
+
 exports.removeAnnounce = async function (req, res) {
     try {
         const validatedData = validationDeleteAnnounce.validate({
