@@ -36,7 +36,7 @@ exports.createUser = async function (req, res) {
             return res.status(400).send({ msg: "error invalids data" });
         }
     } catch (err) {
-        return res.status(500).send({ msg: err });
+        return res.status(500).send({ msg: err.message });
     }
 };
 

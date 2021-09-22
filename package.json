@@ -19,6 +19,7 @@
   "dependencies": {
     "@condor-labs/logger": "^1.0.2",
     "@condor-labs/mongodb": "^1.1.1",
+    "@condor-labs/redis": "^1.0.4",
     "bcrypt": "^5.0.1",
     "config": "^3.3.6",
     "dotenv": "^10.0.0",
