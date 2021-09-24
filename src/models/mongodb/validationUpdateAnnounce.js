@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const schemaUpdateAnnounce = Joi.object({
     id: Joi.string()
-        .required(),   
+        .required(),
 
     userId: Joi.string()
         .min(8)
@@ -12,8 +12,8 @@ const schemaUpdateAnnounce = Joi.object({
     status: Joi.number()
         .integer()
         .min(0)
-        .max(1) 
-        .required()   
+        .max(1)
+        .required()
 });
 
 module.exports = schemaUpdateAnnounce;

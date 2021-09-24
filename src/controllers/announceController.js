@@ -43,42 +43,91 @@ exports.createAnnounce = async function (req, res) {
     }
 };
 
-exports.getAnnouncesbyUser = async function (req, res) {
+exports.getAnnouncesbyUserFilters = async function (req, res) {
     if (typeof req.query.category !== 'undefined') {
-        try {
-            const validatedDataFilter = validationFilter.validate({
-                userId: req.params.id,
-                category: req.query.category
-            });
-
-            if (!validatedDataFilter.error) {
-                const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
-                return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by category" });
-
-            } else {
-                return res.status(400).send({ msg: "error invalids data" });
-            }
-        } catch (err) {
-            return res.status(500).send({ msg: err.message });
-        }
+        getAnnouncesByUserCategory(req, res);
+    }
+    else if (typeof req.query.description !== 'undefined') {
+        getAnnouncesByUserDescription(req, res);
     }
     else {
-        try {
-            const validatedData = validationId.validate({
-                id: req.params.id
-            });
-
-            if (!validatedData.error) {
-                const announces = await announceRepository.findAnnouncesByUser(req.params.id);
-                return res.status(200).send({ data: announces, msg: "Filtered announces by user" });
-            } else {
-                return res.status(400).send({ msg: "error invalids data" });
-            }
-        } catch (err) {
-            return res.status(500).send({ msg: err.message });
-        }
+        getAnnouncesByUser(req, res);
     }
 };
+
+async function getAnnouncesByUserCategory(req, res) {
+    try {
+        const validatedDataFilter = validationFilter.validate({
+            userId: req.params.id,
+            category: req.query.category
+        });
+
+        if (!validatedDataFilter.error) {
+            const filterAnnunces = await announceRepository.findAnnouncesByCategoy(req.params.id, req.query.category.toLowerCase());
+            return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by category" });
+
+        } else {
+            return res.status(400).send({ msg: "error invalids data" });
+        }
+    } catch (err) {
+        return res.status(500).send({ msg: err.message });
+    }
+}
+
+async function getAnnouncesByUser(req, res) {
+    try {
+        const validatedData = validationId.validate({
+            id: req.params.id
+        });
+
+        if (!validatedData.error) {
+            const announces = await announceRepository.findAnnouncesByUser(req.params.id);
+            return res.status(200).send({ data: announces, msg: "Filtered announces by user" });
+        } else {
+            return res.status(400).send({ msg: "error invalids data" });
+        }
+    } catch (err) {
+        return res.status(500).send({ msg: err.message });
+    }
+}
+
+async function getAnnouncesByUserDescription(req, res) {
+    
+    try {
+        const userId = req.params.id;
+        const description = req.query.description;
+        const { page = 1, limit = 10 } = req.query;
+        const redisClient = await redis(settingsRedis).getClient();
+        const redisTTL = (24 - new Date().getHours()) * 3600;
+        const validatedDataFilter = validationFilter.validate({
+            userId: userId,
+            category: description
+        });
+
+        if (!validatedDataFilter.error) {
+            const redisKey = `ANNOUNCE-DESCRIPTION:${description}`;
+            const cachedData = await redisClient.getAsync(redisKey);
+            let filterAnnunces;
+            if (!cachedData) {
+                data = {
+                    description: description, 
+                    limit: limit,
+                     page: page
+                };
+                filterAnnunces = await announceRepository.findAnnouncesByDescription(data);               
+                await redisClient.set(redisKey, JSON.stringify(filterAnnunces), 'EX', redisTTL);
+
+            }
+            filterAnnunces = (cachedData) ? JSON.parse(cachedData) : filterAnnunces;
+            return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by description" });
+
+        } else {
+            return res.status(400).send({ msg: "error invalids data" });
+        }
+    } catch (err) {
+        return res.status(500).send({ msg: err.message });
+    }
+}
 
 exports.getAnnouncebyId = async function (req, res) {
 
@@ -119,7 +168,7 @@ exports.removeAnnounce = async function (req, res) {
         if (!validatedData.error) {
             const announce = await announceRepository.deleteAnnounce(req.params.announceId, req.params.id);
             if (announce) {
-                return res.status(200).send({ data: announce, msg: "Deleted announce" });
+                return res.status(204).send({ data: announce, msg: "Deleted announce" });
             } else {
                 return res.status(404).send({ msg: "Announce doesn't find" });
             }
@@ -157,4 +206,3 @@ exports.updateAnnounce = async function (req, res) {
         return res.status(500).send({ msg: err.message });
     }
 };
-

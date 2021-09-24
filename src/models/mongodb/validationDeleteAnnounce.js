@@ -4,7 +4,7 @@ const schemaDeleteAnnounce = Joi.object({
     id: Joi.string()
         .min(8)
         .max(50)
-        .required(),   
+        .required(),
 
     userId: Joi.string()
         .required()

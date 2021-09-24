@@ -31,7 +31,7 @@ app.post('/users/auth', userController.authenticateUser);
 
 app.post('/users/:id/announces', middleware.ensureAuthenticated, announceController.createAnnounce);
 
-app.get('/users/:id/announces', middleware.ensureAuthenticated, announceController.getAnnouncesbyUser);
+app.get('/users/:id/announces', middleware.ensureAuthenticated, announceController.getAnnouncesbyUserFilters);
 
 app.get('/users/announces/:id', middleware.ensureAuthenticated, announceController.getAnnouncebyId);
 
