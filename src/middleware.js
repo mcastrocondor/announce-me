@@ -13,7 +13,7 @@ exports.ensureAuthenticated = function (req, res, next) {
   try {
     const payload = jwt.decode(token, config.TOKEN_SECRET);
    
-    if (payload.exp <= moment().unix()) {
+    if (payload.exp <= moment().unix()) {      
       return res.status(401).send({ message: "Token have expired" });
     }
     req.user = payload.sub;

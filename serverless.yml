@@ -1,0 +1,33 @@
+service: app-announce
+
+frameworkVersion: "2"
+
+useDotenv: true
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+package:
+individually: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: us-east-1
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+functions:
+  app:
+    handler: ./app-announce/handler.announceMe
+    name: announceMe-${self:provider.stage}
+    events:
+      - http: "get users/{userId}/announces"
+      - http: "post /users/auth"
+          

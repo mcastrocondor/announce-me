@@ -27,10 +27,19 @@
     "joi": "^17.4.2",
     "jwt-simple": "^0.5.6",
     "moment": "^2.29.1",
-    "mongoose": "^6.0.5"
+    "mongoose": "^6.0.5",
+    "serverless-http": "^2.7.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^9.0.1",
     "jest": "^27.2.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "serverless-offline": "^8.2.0",
+    "serverless-webpack": "^5.5.4",
+    "webpack": "^5.53.0",
+    "webpack-node-externals": "^3.0.0"
   }
 }

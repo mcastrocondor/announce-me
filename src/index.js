@@ -8,7 +8,7 @@ const app = express();
 const db = config.get('mongoURI');
 const port = process.env.PORT;
 const userController = require('./controllers/userController');
-const AnnounceController = require('./controllers/announceController');
+const announceController = require('./controllers/announceController');
 
 const middleware = require('./middleware');
 //const mongoHelper = require("./src/models/mongodb/mongoHelper");
@@ -29,15 +29,15 @@ app.post('/users', userController.createUser);
 
 app.post('/users/auth', userController.authenticateUser);
 
-app.post('/users/:id/announces', middleware.ensureAuthenticated, AnnounceController.createAnnounce);
+app.post('/users/:id/announces', middleware.ensureAuthenticated, announceController.createAnnounce);
 
-app.get('/users/:id/announces', middleware.ensureAuthenticated, AnnounceController.getAnnouncesbyUser);
+app.get('/users/:id/announces', middleware.ensureAuthenticated, announceController.getAnnouncesbyUser);
 
-app.get('/users/announces/:id', middleware.ensureAuthenticated, AnnounceController.getAnnouncebyId);
+app.get('/users/announces/:id', middleware.ensureAuthenticated, announceController.getAnnouncebyId);
 
-app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.removeAnnounce);
+app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, announceController.removeAnnounce);
 
-app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, AnnounceController.updateAnnounce);
+app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, announceController.updateAnnounce);
 
 
 module.exports = app;
