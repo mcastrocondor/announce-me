@@ -3,6 +3,7 @@ const validationAnnounce = require('../models/mongodb/validationAnnounce');
 const validationDeleteAnnounce = require('../models/mongodb/validationDeleteAnnounce');
 const validationFilter = require('../models/mongodb/validationFilter');
 const validationId = require('../models/mongodb/validationId');
+const validationText = require('../models/mongodb/validationText');
 const announceRepository = require('../repository/announceRepository');
 require('dotenv').config();
 const redis = require('@condor-labs/redis');
@@ -47,9 +48,6 @@ exports.getAnnouncesbyUserFilters = async function (req, res) {
     if (typeof req.query.category !== 'undefined') {
         getAnnouncesByUserCategory(req, res);
     }
-    else if (typeof req.query.description !== 'undefined') {
-        getAnnouncesByUserDescription(req, res);
-    }
     else {
         getAnnouncesByUser(req, res);
     }
@@ -91,7 +89,7 @@ async function getAnnouncesByUser(req, res) {
     }
 }
 
-async function getAnnouncesByUserDescription(req, res) {
+exports.getAnnouncebyDescription = async function (req, res) {
     
     try {
         const userId = req.params.id;
@@ -99,12 +97,11 @@ async function getAnnouncesByUserDescription(req, res) {
         const { page = 1, limit = 10 } = req.query;
         const redisClient = await redis(settingsRedis).getClient();
         const redisTTL = (24 - new Date().getHours()) * 3600;
-        const validatedDataFilter = validationFilter.validate({
-            userId: userId,
-            category: description
+        const validatedText = validationText.validate({
+            text: description
         });
 
-        if (!validatedDataFilter.error) {
+        if (!validatedText.error) {
             const redisKey = `ANNOUNCE-DESCRIPTION:${description}`;
             const cachedData = await redisClient.getAsync(redisKey);
             let filterAnnunces;

@@ -35,6 +35,8 @@ app.get('/users/:id/announces', middleware.ensureAuthenticated, announceControll
 
 app.get('/users/announces/:id', middleware.ensureAuthenticated, announceController.getAnnouncebyId);
 
+app.get('/announces', middleware.ensureAuthenticated, announceController.getAnnouncebyDescription), 
+
 app.delete('/users/:id/announces/:announceId', middleware.ensureAuthenticated, announceController.removeAnnounce);
 
 app.patch('/users/:id/announces/:announceId', middleware.ensureAuthenticated, announceController.updateAnnounce);

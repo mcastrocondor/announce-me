@@ -29,7 +29,6 @@ exports.findAnnouncesByDescription = async function (data) {
     .skip((data.page - 1) * data.limit);
 
     const count = await Announce.countDocuments();
-    console.log('COUNT ', count, 'data.limit ', data.limit, 'totalPag ', Math.ceil(count / data.limit));
     return { 
         announces: announces,
         totalPages: Math.ceil(count / data.limit),
