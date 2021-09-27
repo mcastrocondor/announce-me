@@ -19,24 +19,33 @@ const settingsRedis = {
 
 exports.createAnnounce = async function (req, res) {
     try {
-        const validatedData = validationAnnounce.validate({
-            userId: req.params.id,
-            description: req.body.description,
-            category: req.body.category,
-            status: 1
-        });
-
-        if (!validatedData.error) {
-            const data = {
-                userId: req.params.id,
+        const reqUser = req.user;
+        const userId = req.params.id;
+        console.log('reqUser ', reqUser);
+        const userId = req.params.id;
+        if (reqUser == userId) {
+            const validatedData = validationAnnounce.validate({
+                userId: userId,
                 description: req.body.description,
-                category: req.body.category.toLowerCase()
-            }
-            const announce = await announceRepository.saveAnnounce(data);
-            return res.status(201).send({ data: announce, msg: "Created announce" });
-        } else {
+                category: req.body.category,
+                status: 1
+            });
 
-            return res.status(400).send({ msg: "error invalids data" });
+            if (!validatedData.error) {
+                const data = {
+                    userId: req.params.id,
+                    description: req.body.description,
+                    category: req.body.category.toLowerCase()
+                }
+                const announce = await announceRepository.saveAnnounce(data);
+                return res.status(201).send({ data: announce, msg: "Created announce" });
+
+            } else {
+
+                return res.status(400).send({ msg: "error invalids data" });
+            }
+        } else {
+            return res.status(401).send({ msg: "UserId doesn't coincide with authenticated user" });
         }
     } catch (err) {
 
@@ -112,41 +121,29 @@ exports.getAnnouncesbyDescription = async function (req, res) {
                 redisKey: redisKey
             };
             if (!cachedData) {
-               
+
                 filterAnnunces = await getAnnouncesRegexDescription(data);
 
             } else {
-               
+
                 filterAnnuncesCache = JSON.parse(cachedData);
                 const totalPages = filterAnnuncesCache.totalPages;
                 const currentPage = filterAnnuncesCache.currentPage;
-                const announces = filterAnnuncesCache.announces
-                
-                const countCache = Object.keys(announces).length;
+                const announces = filterAnnuncesCache.announces;
+                const countCache = announces.length;
+
                 if (countCache < limit) {
+
                     filterAnnuncesCache = await getAnnouncesRegexDescription(data);
                 } else if (countCache > limit) {
-                    let newObject = {};
-                    let i = 0;
-                    let array = [];
-                    for (var key in announces) {
-                        if (i < limit) {
-                            if (announces.hasOwnProperty(key)) {
-                                array.push(announces[key]);
-                            }
-                        }
-                        i++;
-                    }
-                    
-                    newObject['announces'] = array;
-                    newObject['totalPages'] = totalPages;
-                    newObject['currentPage'] = currentPage;
+
+                    let newObject = { announces: announces.slice(0, limit), totalPages: totalPages, currentPage: currentPage };
                     filterAnnuncesCache = newObject;
                 }
             }
 
             filterAnnunces = (!cachedData) ? filterAnnunces : filterAnnuncesCache;
-           
+
             return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by description" });
 
         } else {
@@ -158,7 +155,7 @@ exports.getAnnouncesbyDescription = async function (req, res) {
 }
 
 async function getAnnouncesRegexDescription(data) {
-    const redisTTL = (24 - new Date().getHours()) * 3600;
+    const redisTTL = 3600;
     const filterAnnunces = await announceRepository.findAnnouncesByDescription({ data: data.data, description: data.description, limit: data.limit, page: data.page });
     await data.redisClient.set(data.redisKey, JSON.stringify(filterAnnunces), 'EX', redisTTL);
     return filterAnnunces;
@@ -168,7 +165,7 @@ exports.getAnnouncebyId = async function (req, res) {
 
     try {
         const redisClient = await redis(settingsRedis).getClient();
-        const redisTTL = (24 - new Date().getHours()) * 3600;
+        const redisTTL = 3600;
         const announceId = req.params.id;
         const validatedData = validationId.validate({
             id: announceId
