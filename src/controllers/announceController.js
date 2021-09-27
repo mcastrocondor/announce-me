@@ -89,33 +89,64 @@ async function getAnnouncesByUser(req, res) {
     }
 }
 
-exports.getAnnouncebyDescription = async function (req, res) {
-    
+exports.getAnnouncesbyDescription = async function (req, res) {
+
     try {
-        const userId = req.params.id;
         const description = req.query.description;
         const { page = 1, limit = 10 } = req.query;
-        const redisClient = await redis(settingsRedis).getClient();
-        const redisTTL = (24 - new Date().getHours()) * 3600;
         const validatedText = validationText.validate({
             text: description
         });
 
         if (!validatedText.error) {
-            const redisKey = `ANNOUNCE-DESCRIPTION:${description}`;
+            const redisClient = await redis(settingsRedis).getClient();
+            const redisKey = `ANNOUNCE-DESCRIPTION:${description}_${page}`;
             const cachedData = await redisClient.getAsync(redisKey);
             let filterAnnunces;
+            let filterAnnuncesCache;
+            const data = {
+                description: description,
+                limit: limit,
+                page: page,
+                redisClient: redisClient,
+                redisKey: redisKey
+            };
             if (!cachedData) {
-                data = {
-                    description: description, 
-                    limit: limit,
-                     page: page
-                };
-                filterAnnunces = await announceRepository.findAnnouncesByDescription(data);               
-                await redisClient.set(redisKey, JSON.stringify(filterAnnunces), 'EX', redisTTL);
+               
+                filterAnnunces = await getAnnouncesRegexDescription(data);
 
+            } else {
+               
+                filterAnnuncesCache = JSON.parse(cachedData);
+                const totalPages = filterAnnuncesCache.totalPages;
+                const currentPage = filterAnnuncesCache.currentPage;
+                const announces = filterAnnuncesCache.announces
+                
+                const countCache = Object.keys(announces).length;
+                if (countCache < limit) {
+                    filterAnnuncesCache = await getAnnouncesRegexDescription(data);
+                } else if (countCache > limit) {
+                    let newObject = {};
+                    let i = 0;
+                    let array = [];
+                    for (var key in announces) {
+                        if (i < limit) {
+                            if (announces.hasOwnProperty(key)) {
+                                array.push(announces[key]);
+                            }
+                        }
+                        i++;
+                    }
+                    
+                    newObject['announces'] = array;
+                    newObject['totalPages'] = totalPages;
+                    newObject['currentPage'] = currentPage;
+                    filterAnnuncesCache = newObject;
+                }
             }
-            filterAnnunces = (cachedData) ? JSON.parse(cachedData) : filterAnnunces;
+
+            filterAnnunces = (!cachedData) ? filterAnnunces : filterAnnuncesCache;
+           
             return res.status(200).send({ data: filterAnnunces, msg: "Filtered announces by description" });
 
         } else {
@@ -124,6 +155,13 @@ exports.getAnnouncebyDescription = async function (req, res) {
     } catch (err) {
         return res.status(500).send({ msg: err.message });
     }
+}
+
+async function getAnnouncesRegexDescription(data) {
+    const redisTTL = (24 - new Date().getHours()) * 3600;
+    const filterAnnunces = await announceRepository.findAnnouncesByDescription({ data: data.data, description: data.description, limit: data.limit, page: data.page });
+    await data.redisClient.set(data.redisKey, JSON.stringify(filterAnnunces), 'EX', redisTTL);
+    return filterAnnunces;
 }
 
 exports.getAnnouncebyId = async function (req, res) {

@@ -27,7 +27,6 @@ exports.findAnnouncesByDescription = async function (data) {
    
     const announces = await Announce.find({ description: { $regex: '.*' + data.description + '.*', $options: 'i' } }).populate("user", { name: 1, username: 1 }).limit(data.limit * 1)
     .skip((data.page - 1) * data.limit);
-
     const count = await Announce.countDocuments();
     return { 
         announces: announces,
