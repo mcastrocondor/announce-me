@@ -18,8 +18,8 @@ exports.createUser = async function (req, res) {
     if (validatedData.error) {
       return res.status(400).send({ msg: "error invalids data" });
     }
-    const username = username.toLowerCase();
-    const gotUser = await userRepository.getUser(username);
+   
+    const gotUser = await userRepository.getUser(username.toLowerCase());
 
     if (gotUser) {
       return res.status(409).send({ msg: "Username really exist" });
